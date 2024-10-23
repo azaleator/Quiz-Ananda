@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ananda sedang ujicoba</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .quiz-container {
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #34495e;
+            display: none;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background-color: #4834d4;
+            color: white;
+            border-color: #4834d4;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4834d4;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .reward {
+            text-align: center;
+            display: none;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .reward h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .reward p {
+            font-size: 1.2em;
+            color: #34495e;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .next-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #4834d4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            background-color: #3721b0;
+            transform: translateY(-2px);
+        }
+
+        .next-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ananda sedang ujicoba</h1>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <div class="quiz-container" id="quiz-container">
+            <!-- Questions will be inserted here by JavaScript -->
+        </div>
+
+        <div class="reward" id="reward">
+            <h2>✨ Terima kasih telah menyelesaikan quiz ini! ✨</h2>
+            <p>Tidak ada jawaban benar atau salah, setiap insan itu unik, jadilah diri sendiri</p>
+        </div>
+
+        <button class="next-btn" id="next-btn" disabled>Selanjutnya</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Ketika menghadapi masalah, apa yang biasanya Anda lakukan pertama kali?",
+                options: [
+                    "Mencari solusi sendiri terlebih dahulu",
+                    "Langsung meminta bantuan orang lain",
+                    "Menunggu masalah selesai dengan sendirinya",
+                    "Menganalisis penyebab masalah"
+                ]
+            },
+            {
+                question: "Dalam situasi sosial, bagaimana Anda biasanya berperilaku?",
+                options: [
+                    "Aktif memulai percakapan",
+                    "Menunggu diajak berbicara",
+                    "Mengamati dari kejauhan",
+                    "Bergabung dengan orang yang sudah dikenal"
+                ]
+            },
+            {
+                question: "Bagaimana Anda merespons kritik?",
+                options: [
+                    "Menerima dan langsung memperbaiki diri",
+                    "Mempertimbangkan dengan hati-hati",
+                    "Merasa tersinggung tapi menyimpannya",
+                    "Mencari pembenaran atas tindakan"
+                ]
+            },
+            {
+                question: "Apa yang paling Anda prioritaskan dalam hidup?",
+                options: [
+                    "Kebahagiaan pribadi",
+                    "Kesuksesan karir",
+                    "Hubungan dengan orang lain",
+                    "Pengembangan diri"
+                ]
+            },
+            {
+                question: "Bagaimana cara Anda mengekspresikan perasaan?",
+                options: [
+                    "Mengungkapkan secara langsung",
+                    "Menulis atau berkreasi",
+                    "Memendam sendiri",
+                    "Berbagi dengan orang terdekat"
+                ]
+            },
+            {
+                question: "Dalam mengambil keputusan, apa yang paling berpengaruh?",
+                options: [
+                    "Logika dan fakta",
+                    "Perasaan dan intuisi",
+                    "Saran dari orang lain",
+                    "Pengalaman masa lalu"
+                ]
+            },
+            {
+                question: "Bagaimana Anda melihat kegagalan?",
+                options: [
+                    "Sebagai pembelajaran berharga",
+                    "Sesuatu yang harus dihindari",
+                    "Bagian normal dari hidup",
+                    "Tantangan untuk bangkit"
+                ]
+            },
+            {
+                question: "Apa yang membuat Anda merasa paling bahagia?",
+                options: [
+                    "Mencapai target pribadi",
+                    "Membantu orang lain",
+                    "Menghabiskan waktu sendiri",
+                    "Berkumpul dengan orang terdekat"
+                ]
+            },
+            {
+                question: "Bagaimana Anda menghadapi perubahan?",
+                options: [
+                    "Menyambut dengan antusias",
+                    "Butuh waktu untuk adaptasi",
+                    "Cenderung menolak",
+                    "Mengikuti arus"
+                ]
+            },
+            {
+                question: "Apa yang Anda lakukan saat merasa stress?",
+                options: [
+                    "Mencari kegiatan yang menenangkan",
+                    "Berbicara dengan teman",
+                    "Mencari solusi praktis",
+                    "Mengambil waktu sendiri"
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const nextButton = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+        const rewardSection = document.getElementById('reward');
+
+        function displayQuestion() {
+            const question = questions[currentQuestion];
+            
+            quizContainer.innerHTML = `
+                <div class="question">
+                    <h3>${currentQuestion + 1}. ${question.question}</h3>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectOption(${index})">${option}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.querySelector('.question').style.display = 'block';
+            nextButton.disabled = true;
+            updateProgress();
+        }
+
+        function selectOption(index) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => option.classList.remove('selected'));
+            options[index].classList.add('selected');
+            answers[currentQuestion] = index;
+            nextButton.disabled = false;
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function showReward() {
+            quizContainer.style.display = 'none';
+            nextButton.style.display = 'none';
+            rewardSection.style.display = 'block';
+        }
+
+        nextButton.addEventListener('click', () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                displayQuestion();
+            } else {
+                showReward();
+            }
+        });
+
+        // Start the quiz
+        displayQuestion();
+    </script>
+</body>
+</html>
